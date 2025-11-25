@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         savePhotoBtn.style.display = 'block';
     });
 
-    // Save photo button click handler (includes required fields)
+    // Save photo button click handler (includes all fields)
     savePhotoBtn.addEventListener('click', () => {
         if (!selectedFile) {
             showAlert('No file selected.', 'danger');
@@ -77,10 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
         savePhotoBtn.disabled = true;
         savePhotoBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Uploading...';
 
-        // Get current form values for validation
+        // Get current form values
         const nameInput = profileForm.querySelector('input[name="name"]');
         const emailInput = profileForm.querySelector('input[name="email"]');
         const phoneInput = profileForm.querySelector('input[name="phone"]');
+        const birthDateInput = profileForm.querySelector('input[name="birth_date"]');
+        const genderInput = profileForm.querySelector('select[name="gender"]');
+        const locationInput = profileForm.querySelector('input[name="location"]');
 
         const formData = new FormData();
         formData.append('profile_image', selectedFile);
@@ -89,6 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('name', nameInput ? nameInput.value : '');
         formData.append('email', emailInput ? emailInput.value : '');
         if (phoneInput) formData.append('phone', phoneInput.value || '');
+        if (birthDateInput) formData.append('birth_date', birthDateInput.value || '');
+        if (genderInput) formData.append('gender', genderInput.value || '');
+        if (locationInput) formData.append('location', locationInput.value || '');
 
         fetch(profileUpdateRoute, { 
             method: 'POST', 
