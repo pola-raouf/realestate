@@ -35,7 +35,13 @@
                 <li class="nav-item">
                     <a class="nav-link fw-semibold {{ Request::is('about-us') ? 'active' : '' }}" href="{{ route('about-us') }}">About Us</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold {{ Request::is('properties') ? 'active' : '' }}" href="{{ route('properties.index') }}">
+                        Properties
+                    </a>
+                </li>
                 @auth
+                    @auth
                     @auth
                         @if(in_array(auth()->user()->role, ['admin', 'seller']))
                     <li class="nav-item">
@@ -46,11 +52,7 @@
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <img 
-                                src="{{ Auth::user()->profile_image_url }}" 
-                                alt="{{ Auth::user()->name }}" 
-                                class="rounded-circle profile-img me-2"
-                            >
+                            <img src="{{ Auth::user()->profile_image_url }}" alt="{{ Auth::user()->name }}" class="rounded-circle profile-img me-2">
                             <span>{{ Auth::user()->name }}</span>
                             <i class="bi bi-chevron-down ms-1 small"></i>
                         </a>
@@ -84,33 +86,52 @@
         <!-- LEFT: Form -->
         <div class="col-lg-8">
             <div class="card shadow-sm p-4 mb-4">
-                <h5 class="mb-4">
-                    <i class="bi bi-person-circle me-2"></i>Personal Information
-                </h5>
+                <h5 class="mb-4"><i class="bi bi-person-circle me-2"></i>Personal Information</h5>
                 <form id="profileForm" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="row g-3">
+                        <!-- Name & Email -->
                         <div class="col-md-6">
-                            <label class="form-label">
-                                <i class="bi bi-person me-1"></i>Full Name
-                            </label>
+                            <label class="form-label"><i class="bi bi-person me-1"></i>Full Name</label>
                             <input type="text" name="name" class="form-control" value="{{ old('name', auth()->user()->name) }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">
-                                <i class="bi bi-envelope me-1"></i>Email
-                            </label>
+                            <label class="form-label"><i class="bi bi-envelope me-1"></i>Email</label>
                             <input type="email" name="email" class="form-control" value="{{ old('email', auth()->user()->email) }}" required>
                         </div>
 
+                        <!-- Phone -->
                         <div class="col-md-6">
-                            <label class="form-label">
-                                <i class="bi bi-telephone me-1"></i>Phone Number
-                            </label>
+                            <label class="form-label"><i class="bi bi-telephone me-1"></i>Phone Number</label>
                             <input type="text" name="phone" class="form-control" value="{{ old('phone', auth()->user()->phone) }}">
                         </div>
+
+                        <!-- Birth Date -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-calendar me-1"></i>Birth Date</label>
+                            <input type="date" name="birth_date" class="form-control" value="{{ old('birth_date', auth()->user()->birth_date) }}">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-gender-ambiguous me-1"></i>Gender</label>
+                            <select name="gender" class="form-select">
+                                <option value="" disabled {{ old('gender', auth()->user()->gender) ? '' : 'selected' }}>Select Gender</option>
+                                <option value="male" {{ old('gender', auth()->user()->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                                <option value="female" {{ old('gender', auth()->user()->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                                <option value="other" {{ old('gender', auth()->user()->gender) === 'other' ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="bi bi-geo-alt me-1"></i>Location</label>
+                            <input type="text" name="location" class="form-control" value="{{ old('location', auth()->user()->location) }}">
+                        </div>
+
+                        <!-- Current Password -->
                         <div class="col-md-6">
                             <label class="form-label d-flex align-items-center">
                                 <i class="bi bi-lock me-1"></i>Current Password
@@ -122,16 +143,13 @@
                             <input type="password" name="current_password" id="current_password" class="form-control" placeholder="Enter current password">
                         </div>
 
+                        <!-- New Password & Confirm -->
                         <div class="col-md-6">
-                            <label class="form-label">
-                                <i class="bi bi-key me-1"></i>New Password
-                            </label>
+                            <label class="form-label"><i class="bi bi-key me-1"></i>New Password</label>
                             <input type="password" name="password" class="form-control" placeholder="Leave empty to keep current">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">
-                                <i class="bi bi-key-fill me-1"></i>Confirm New Password
-                            </label>
+                            <label class="form-label"><i class="bi bi-key-fill me-1"></i>Confirm New Password</label>
                             <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm new password">
                         </div>
                     </div>
@@ -148,9 +166,7 @@
         <!-- RIGHT: Profile Picture -->
         <div class="col-lg-4">
             <div class="card shadow-sm p-4 text-center">
-                <h5 class="mb-4">
-                    <i class="bi bi-image me-2"></i>Profile Picture
-                </h5>
+                <h5 class="mb-4"><i class="bi bi-image me-2"></i>Profile Picture</h5>
                 @php
                     $authUser = auth()->user();
                     $profileImageUrl = $authUser->profile_image_url;
@@ -162,8 +178,6 @@
                         data-has-image="{{ $hasProfileImage }}"
                         alt="Profile Picture" class="rounded-circle profile-img-large">
 
-
-                    <!-- Hover overlay -->
                     <div class="profile-overlay">
                         <i class="bi bi-camera-fill mb-1"></i>
                         <span>Upload</span>
@@ -171,7 +185,6 @@
                     </div>
                 </div>
 
-                <!-- Save and Delete buttons -->
                 <div class="profile-picture-actions">
                     <button type="button" id="savePhotoBtn" class="btn btn-primary btn-sm mb-2" style="display: none;">
                         <i class="bi bi-check-circle me-1"></i>Save Photo
@@ -187,7 +200,6 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     window.profileUpdateRoute = '{{ route("profile.update") }}';
