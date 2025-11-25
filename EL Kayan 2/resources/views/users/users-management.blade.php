@@ -28,7 +28,10 @@
                     <a class="nav-link fw-semibold {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-semibold {{ Request::is('about-us') ? 'active' : '' }}" href="{{ route('about-us') }}">About Us</a>
+                    <a class="nav-link fw-semibold {{ Request::is('properties') ? 'active' : '' }}" href="{{ route('properties.index') }}">Properties</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link fw-semibold {{ Request::is('users-management') ? 'active' : '' }}" href="{{ route('users-management') }}">User Management</a>
@@ -93,13 +96,27 @@
                     <select name="role" class="input-edit" required>
                         <option value="" disabled selected>Select Role</option>
                         <option value="admin">Admin</option>
-                        <option value="buyer">Buyer</option>
-                        <option value="seller">Seller</option>
+                        <option value="client">Client</option>
+                        <option value="user">User</option>
                     </select>
                 </div>
             </div>
+                <div class="field-label">Birth Date</div>
+                <div class="field-control"><input type="date" name="birth_date" class="input-edit" required></div>
 
-            <div class="button-group mt-3">
+                <div class="field-label">Gender</div>
+                <div class="field-control">
+                    <select name="gender" class="input-edit" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="field-label">Location</div>
+                <div class="field-control"><input type="text" name="location" class="input-edit" placeholder="Location" required></div>
+                <div class="button-group mt-3">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add User</button>
             </div>
         </form>
@@ -188,9 +205,21 @@
                 <label>Role</label>
                 <select id="edit-role" required>
                     <option value="admin">Admin</option>
-                    <option value="buyer">Buyer</option>
-                    <option value="seller">Seller</option>
+                    <option value="client">Client</option>
+                    <option value="user">User</option>
                 </select>
+                <label>Birth Date</label>
+                <input type="date" id="edit-birth_date" required>
+
+                <label>Gender</label>
+                <select id="edit-gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label>Location</label>
+                <input type="text" id="edit-location" required>
                 <div class="modal-actions mt-3">
                     <button type="button" class="btn btn-secondary" id="edit-cancel">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update</button>
