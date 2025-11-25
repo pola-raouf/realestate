@@ -25,21 +25,17 @@ Route::get('/settings', function () {
     return view('settings');
 })->name('settings');
 
-Route::middleware(['auth', Role::class . ':admin'])
+Route::middleware(['auth', Role::class . ':admin,seller'])
     ->get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
-Route::middleware(['auth', Role::class . ':seller'])
-    ->get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');    
+   
 
-Route::middleware(['auth', Role::class . ':seller'])
+Route::middleware(['auth', Role::class . ':seller,admin'])
     ->get('/dashboard/client-data', [DashboardController::class, 'getClientData'])
     ->name('dashboard.clientData');
 
-Route::middleware(['auth', Role::class . ':admin'])
-    ->get('/dashboard/client-data', [DashboardController::class, 'getClientData'])
-    ->name('dashboard.clientData');
+
 
 
 route::middleware('guest')->group(function(){
@@ -89,25 +85,9 @@ Route::post('/properties/{property}/reserve', [PropertyController::class, 'reser
 
 
 // Property management routes
-Route::middleware(['auth',Role::class.':admin'])->group(function () {
 
-    // Property management page
-    Route::get('/property-management', [PropertyController::class, 'propertyManagement'])->name('property-management');
 
-    // Store new property (AJAX or normal form)
-    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
-
-    // Edit property form (optional if using modal)
-    //Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
-
-    // Update property (AJAX or normal form)
-    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
-
-    // Delete property (AJAX or normal form)
-    Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
-});
-
-Route::middleware(['auth',Role::class.':seller'])->group(function () {
+Route::middleware(['auth',Role::class.':seller,admin'])->group(function () {
 
     // Property management page
     Route::get('/property-management', [PropertyController::class, 'propertyManagement'])->name('property-management');
