@@ -39,6 +39,9 @@ class ProfileController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'phone' => 'nullable|string|max:20',
+            'birth_date' => 'nullable|date',
+            'gender' => 'nullable|in:male,female,other',
+            'location' => 'nullable|string|max:255',
             'current_password' => 'nullable|string',
             'password' => 'nullable|string|min:6|confirmed',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:3072',
@@ -55,6 +58,9 @@ class ProfileController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->birth_date = $request->birth_date;
+        $user->gender = $request->gender;
+        $user->location = $request->location;
 
         if ($request->filled('password')) {
             if (
