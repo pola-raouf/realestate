@@ -35,8 +35,11 @@ class UserController extends Controller
         'name' => 'required|string|max:30',
         'email' => 'required|string|email|unique:users,email|max:60',
         'password' => 'required|string|min:8',
+        'birth_date' => 'required|date',
+        'gender' => 'required|in:male,female,other',
+        'location' => 'required|string|max:255',
         'phone' => 'required|numeric|digits_between:10,11',
-        'role' => 'required|string|in:admin,seller,buyer',
+        'role' => 'required|string|in:admin,client,user'
     ]);
       
     $secretKey = env('PASSWORD_HMAC_KEY');
@@ -45,10 +48,13 @@ class UserController extends Controller
 
     $user = User::create([
         'name' => $data['name'],
-        'email'=> $data['email'],
-        'password'=> $bcryptHash,
-        'phone'=> $data['phone'],
-        'role'=> $data['role'],
+            'email'=> $data['email'],
+            'password'=> $bcryptHash,
+            'birth_date'=> $data['birth_date'],
+            'gender'=> $data['gender'],
+            'location'=> $data['location'],
+            'phone'=> $data['phone'],
+            'role'=> $data['role'],
     ]);
 
     if ($request->ajax()) {
@@ -80,33 +86,20 @@ public function search(Request $request)
 
 
 
-    // public function show(User $user)
-    // {
-    //     try {
-    //         return view('users.show', compact('user'));
-    //     } catch (\Exception $e) {
-    //         return back()->with('error', 'Something went wrong: ' . $e->getMessage());
-    //     }
-    // }
-
-    // public function edit(User $user)
-    // {
-    //     try {
-    //         return view('users.edit', compact('user'));
-    //     } catch (\Exception $e) {
-    //         return back()->with('error', 'Something went wrong: ' . $e->getMessage());
-    //     }
-    // }
+    
 
     public function update(Request $request, User $user)
 {
     try {
         $data = $request->validate([
             'name' => 'required|string|max:30',
-            'email' => 'required|string|email|unique:users,email,' . $user->id . '|max:60',
-            'password' => 'nullable|string|min:8',
-            'phone' => 'required|numeric|digits_between:10,11',
-            'role' => 'required|string|in:admin,seller,buyer',
+                'email' => 'required|string|email|unique:users,email,' . $user->id . '|max:60',
+                'password' => 'nullable|string|min:8',
+                'birth_date' => 'required|date',
+                'gender' => 'required|in:male,female,other',
+                'location' => 'required|string|max:255',
+                'phone' => 'required|numeric|digits_between:10,11',
+                'role' => 'required|string|in:admin,client,user',
         ]);
 
         if (!empty($data['password'])) {
