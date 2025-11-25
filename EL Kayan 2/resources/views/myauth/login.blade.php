@@ -47,18 +47,20 @@
 <!-- ================= LOGIN FORM ================= -->
 <div class="login-box">
     <h2>Login with your account</h2>
+    <p class="helper-text">Use the email you registered with. Password must be at least 8 characters.</p>
 
     <form action="{{ route('login') }}" method="POST" id="loginForm">
         @csrf
         <div class="input-box">
             <label for="email">Email</label>
             <input type="email" name="email" id="email" placeholder="Enter your email" required>
-            <small id="email-feedback"></small>
+            <small id="email-feedback" class="validation-msg"></small>
         </div>
 
         <div class="input-box">
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" placeholder="Enter your password" required>
+            <input type="password" name="password" id="password" placeholder="Enter your password" required minlength="8">
+            <small id="password-feedback" class="validation-msg"></small>
         </div>
 
         <div class="forgot-password">
@@ -80,12 +82,15 @@
 <script>
     const emailInput = document.getElementById('email');
     const feedback = document.getElementById('email-feedback');
+    const passwordFeedback = document.getElementById('password-feedback');
     const loginForm = document.getElementById('loginForm');
+
+    const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
     emailInput.addEventListener('input', function() {
         const email = emailInput.value;
 
-        if(email.length > 5) {
+        if(email.length > 5 && isEmailValid(email)) {
             fetch('{{ route("check.email") }}', {
                 method: 'POST',
                 headers: {
@@ -112,10 +117,39 @@
         }
     });
 
+    password.addEventListener('input', function () {
+        if (password.value.length < 8) {
+            passwordFeedback.textContent = 'Password must be at least 8 characters';
+            passwordFeedback.style.color = 'red';
+        } else {
+            passwordFeedback.textContent = 'Looks good';
+            passwordFeedback.style.color = 'green';
+        }
+    });
+
     loginForm.addEventListener('submit', function(e) {
-        if(feedback.textContent === 'Email not found ❌') {
+        let hasError = false;
+
+        if (!isEmailValid(emailInput.value)) {
+            feedback.style.color = 'red';
+            feedback.textContent = 'Enter a valid email address';
+            hasError = true;
+        }
+
+        if (feedback.textContent === 'Email not found ❌') {
             e.preventDefault();
             alert('Cannot login: email not found in database.');
+            return;
+        }
+
+        if (password.value.length < 8) {
+            passwordFeedback.textContent = 'Password must be at least 8 characters';
+            passwordFeedback.style.color = 'red';
+            hasError = true;
+        }
+
+        if (hasError) {
+            e.preventDefault();
         }
     });
 </script>
